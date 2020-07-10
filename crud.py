@@ -51,23 +51,23 @@ class App:
 
 		self.inputId = Entry(editor)
 		self.inputId.grid(row = 0, column = 1, padx = 10, pady = 10)
-		self.inputId.config(width = 30)
+		self.inputId.config(width = 30, justify = "center")
 
 		self.inputName = Entry(editor)
 		self.inputName.grid(row = 1, column = 1, padx = 10, pady = 10)
-		self.inputName.config(width = 30)
+		self.inputName.config(width = 30, justify = "center")
 
 		self.inputLastname = Entry(editor)
 		self.inputLastname.grid(row = 2, column = 1, padx = 10, pady = 10)
-		self.inputLastname.config(width = 30)
+		self.inputLastname.config(width = 30, justify = "center")
 
 		self.inputmail = Entry(editor)
 		self.inputmail.grid(row = 3, column = 1, padx = 10, pady = 10)
-		self.inputmail.config(width = 30)
+		self.inputmail.config(width = 30, justify = "center")
 
 		self.inputPass = Entry(editor)
 		self.inputPass.grid(row = 4, column = 1, padx = 10, pady = 10)
-		self.inputPass.config(width = 30)
+		self.inputPass.config(width = 30, justify = "center")
 
 		self.inputComent = Text(editor, width = 35, height = 10)
 		self.inputComent.grid(row = 5, column = 1, padx = 10, pady = 10)
@@ -82,7 +82,7 @@ class App:
 		readButton = Button (buttons, text = "Read", command = self.read_data)
 		readButton.grid(row = 0, column = 1)
 
-		updateButton = Button (buttons, text = "Update")
+		updateButton = Button (buttons, text = "Update", command = self.update_data)
 		updateButton.grid(row = 0, column = 2)
 
 		deleteButton = Button (buttons, text = "Delete")
@@ -141,36 +141,52 @@ class App:
 		self.inputComent.delete(1.0, END)
 
 	def add_user(self):
-		if len(self.inputName.get()) != 0 and len(self.inputPass.get()) != 0:
-			query = 'INSERT INTO USERSDATA VALUES (NULL, ?,?,?,?,?)'
-			parametros = self.inputName.get(),self.inputLastname.get(),self.inputmail.get(),self.inputPass.get(),self.inputComent.get(1.0, END)
-			self.run_query(query, parametros)
-			self.clean_data()
-			self.charge_data()
-		else:
-			messagebox.showwarning("Wait!", "At least put the name and the password.")
+		try:
+			if len(self.inputName.get()) != 0 and len(self.inputPass.get()) != 0:
+				query = 'INSERT INTO USERSDATA VALUES (NULL, ?,?,?,?,?)'
+				parametros = self.inputName.get(),self.inputLastname.get(),self.inputmail.get(),self.inputPass.get(),self.inputComent.get(1.0, END)
+				self.run_query(query, parametros)
+				self.clean_data()
+				self.charge_data()
+			else:
+				messagebox.showwarning("Wait!", "At least put the name and the password.")
+		except:
+				messagebox.showwarning("Wait!", "There is already a user with this email.")
+
 
 	def read_data(self):
-		conn = sqlite3.connect("Users.db")
-		cursor=conn.cursor()
-		selection = str(self.table.item(self.table.selection())['text'])
-		cursor.execute('SELECT * FROM USERSDATA WHERE ID =' + selection)
+		try:
+			conn = sqlite3.connect("Users.db")
+			cursor=conn.cursor()
+			selection = str(self.table.item(self.table.selection())['text'])
+			cursor.execute('SELECT * FROM USERSDATA WHERE ID =' + selection)
 
-		theuser = cursor.fetchall()
+			theuser = cursor.fetchall()
 
-		self.clean_data()
+			self.clean_data()
 
-		for user in theuser:
-			self.inputId.insert(0,user[0])
-			self.inputName.insert(0,user[1])
-			self.inputLastname.insert(0,user[2])
-			self.inputmail.insert(0,user[3])
-			self.inputPass.insert(0,user[4])
-			self.inputComent.insert(1.0, user[5])
+			for user in theuser:
+				self.inputId.insert(0,user[0])
+				self.inputName.insert(0,user[1])
+				self.inputLastname.insert(0,user[2])
+				self.inputmail.insert(0,user[3])
+				self.inputPass.insert(0,user[4])
+				self.inputComent.insert(1.0, user[5])
 
-		conn.commit()
+			conn.commit()
 
-		self.charge_data()
+			self.charge_data()
+		except:
+			messagebox.showwarning("Wait!", "Select user from the right size table.")
+
+	def update_data(self):
+		if len(self.inputName.get()) != 0 and len(self.inputPass.get()) != 0:
+			query = 'UPDATE USERSDATA SET USER_NAME=?, LASTNAME=?, EMAIL=?, PASS=?, COMENT=?' + 'WHERE ID = ' + self.inputId.get()
+			parametros = self.inputName.get(),self.inputLastname.get(),self.inputmail.get(),self.inputPass.get(),self.inputComent.get(1.0, END)
+			self.run_query(query, parametros)
+			messagebox.showinfo("Great!", "The register has been successfully updated.")
+			self.clean_data()
+			self.charge_data()
 
 
 
