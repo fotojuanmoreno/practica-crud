@@ -67,7 +67,7 @@ class App:
 
 		self.inputPass = Entry(editor)
 		self.inputPass.grid(row = 4, column = 1, padx = 10, pady = 10)
-		self.inputPass.config(width = 30, justify = "center")
+		self.inputPass.config(width = 30, justify = "center", show="*")
 
 		self.inputComent = Text(editor, width = 35, height = 10)
 		self.inputComent.grid(row = 5, column = 1, padx = 10, pady = 10)
@@ -87,6 +87,9 @@ class App:
 
 		deleteButton = Button (buttons, text = "Delete", command = self.delete_data)
 		deleteButton.grid(row = 0, column = 3)
+
+		cleanButton = Button (buttons, text = "Clean", command = self.clean_entrys)
+		cleanButton.grid(row = 0, column = 4)
 
 		#----------Panel----------
 
@@ -199,6 +202,15 @@ class App:
 				messagebox.showinfo("OK", "The user was successfully deleted.")
 			else:
 				messagebox.showwarning("Delete", "Select the user what you want delete.")
+
+	def clean_entrys(self):
+		self.inputId.delete(0, END)
+		self.inputName.delete(0, END)
+		self.inputLastname.delete(0, END)
+		self.inputmail.delete(0, END)
+		self.inputPass.delete(0, END)
+		self.inputComent.delete(1.0, END)
+
 
 
 
