@@ -79,7 +79,7 @@ class App:
 		createButton = Button (buttons, text = "Create", command = self.add_user)
 		createButton.grid(row = 0, column = 0)
 
-		readButton = Button (buttons, text = "Read")
+		readButton = Button (buttons, text = "Read", command = self.read_data)
 		readButton.grid(row = 0, column = 1)
 
 		updateButton = Button (buttons, text = "Update")
@@ -149,6 +149,29 @@ class App:
 			self.charge_data()
 		else:
 			messagebox.showwarning("Wait!", "At least put the name and the password.")
+
+	def read_data(self):
+		conn = sqlite3.connect("Users.db")
+		cursor=conn.cursor()
+		selection = str(self.table.item(self.table.selection())['text'])
+		cursor.execute('SELECT * FROM USERSDATA WHERE ID =' + selection)
+
+		theuser = cursor.fetchall()
+
+		self.clean_data()
+
+		for user in theuser:
+			self.inputId.insert(0,user[0])
+			self.inputName.insert(0,user[1])
+			self.inputLastname.insert(0,user[2])
+			self.inputmail.insert(0,user[3])
+			self.inputPass.insert(0,user[4])
+			self.inputComent.insert(1.0, user[5])
+
+		conn.commit()
+
+		self.charge_data()
+
 
 
 
