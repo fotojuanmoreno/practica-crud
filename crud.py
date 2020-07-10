@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import ttk
 import sqlite3
 from tkinter import messagebox
 
@@ -9,12 +10,15 @@ class App:
 
 	def __init__(self, root):
 		self.master = root
+		self.master.config(padx = 50, pady = 50)
 		self.master.title("My first CRUD proyect")
 
 		editor = Frame (self.master)
 		editor.grid(row = 0, column = 0, pady = 10, sticky = 'nw')
 		buttons = Frame(self.master)
 		buttons.grid(row = 1, pady = 10)
+		panel = Frame(self.master)
+		panel.grid(row = 0, column = 1)
 
 
 		#----------Labels----------
@@ -84,6 +88,29 @@ class App:
 		deleteButton = Button (buttons, text = "Delete")
 		deleteButton.grid(row = 0, column = 3)
 
+		#----------Panel----------
+
+		self.table = ttk.Treeview(panel, height = 20, columns = ("#0", "Name", "Lastname", "mail", "Pass", "Coment"))
+		self.table.grid(row = 0, column = 0)
+		self.table.column('#0', width = 60)
+		self.table.column('#1', width = 100)
+		self.table.column('#2', width = 100)
+		self.table.column('#3', width = 120)
+		self.table.column('#4', width = 200)
+		self.table.column('#5', width = 300)
+		self.table.column('#6', width = 0)
+		self.table.heading('#0', text = 'ID', anchor = CENTER)
+		self.table.heading('#1', text = 'Name', anchor = CENTER)
+		self.table.heading('#2', text = 'Lastname', anchor = CENTER)
+		self.table.heading('#3', text = 'Mail', anchor = CENTER)
+		self.table.heading('#4', text = 'Password', anchor = CENTER)
+		self.table.heading('#5', text = 'Coment', anchor = CENTER)
+
+		self.charge_data()
+
+
+
+
 	#----------Functions----------
 
 	def run_query(self, query, parametros = ()):
@@ -92,6 +119,17 @@ class App:
 			result = cursor.execute(query, parametros)
 			conn.commit()
 		return result
+
+	def charge_data(self):
+		content = self.table.get_children()
+		for element in content:
+			self.table.delete(element)
+		#Consulta datos
+		query = 'SELECT * FROM USERSDATA ORDER BY ID  DESC'
+		db_rows = self.run_query(query)
+		#rellenando datos
+		for row in db_rows:
+			self.table.insert('', 0, text = row[0], values =  row[1:6])
 
 	def clean_data(self):
 		#Cambiar por un bucle for
@@ -108,7 +146,7 @@ class App:
 			parametros = self.inputName.get(),self.inputLastname.get(),self.inputmail.get(),self.inputPass.get(),self.inputComent.get(1.0, END)
 			self.run_query(query, parametros)
 			self.clean_data()
-			#self.dameDatos()
+			self.charge_data()
 		else:
 			messagebox.showwarning("Wait!", "At least put the name and the password.")
 
