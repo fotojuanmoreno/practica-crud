@@ -85,7 +85,7 @@ class App:
 		updateButton = Button (buttons, text = "Update", command = self.update_data)
 		updateButton.grid(row = 0, column = 2)
 
-		deleteButton = Button (buttons, text = "Delete")
+		deleteButton = Button (buttons, text = "Delete", command = self.delete_data)
 		deleteButton.grid(row = 0, column = 3)
 
 		#----------Panel----------
@@ -187,6 +187,18 @@ class App:
 			messagebox.showinfo("Great!", "The register has been successfully updated.")
 			self.clean_data()
 			self.charge_data()
+
+	def delete_data(self):
+		if len(self.inputId.get()) != 0:
+			eliminate = messagebox.askquestion("Delete", "Do you want to delete this user?")
+			if eliminate=="yes":
+				query = 'DELETE FROM USERSDATA WHERE ID = ?'
+				parametros = self.inputId.get()
+				self.run_query(query, (parametros, ))
+				self.charge_data()
+				messagebox.showinfo("OK", "The user was successfully deleted.")
+			else:
+				messagebox.showwarning("Delete", "Select the user what you want delete.")
 
 
 
