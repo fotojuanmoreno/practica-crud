@@ -5,3 +5,6 @@ El primer commit incluye la primera parte visual. Unos labels y Entry con tkinte
 
 El segundo cambia uno de los Entry por un text para los comentarios y añade algun aspecto visual más. 
 Incluye la db y funciones para conectacr con ella e incluir informacion.
+
+El tercer commit añade un apartado para ver el contenido de la base de datos.
+
