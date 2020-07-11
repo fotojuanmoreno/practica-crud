@@ -93,7 +93,7 @@ class App:
 
 		#----------Panel----------
 
-		self.table = ttk.Treeview(panel, height = 20, columns = ("#0", "Name", "Lastname", "mail", "Pass", "Coment"))
+		self.table = ttk.Treeview(panel, height = 20, columns = ("Name", "Lastname", "mail", "Pass", "Coment"))
 		self.table.grid(row = 0, column = 0)
 		self.table.column('#0', width = 60)
 		self.table.column('#1', width = 100)
@@ -101,7 +101,6 @@ class App:
 		self.table.column('#3', width = 120)
 		self.table.column('#4', width = 200)
 		self.table.column('#5', width = 300)
-		self.table.column('#6', width = 0)
 		self.table.heading('#0', text = 'ID', anchor = CENTER)
 		self.table.heading('#1', text = 'Name', anchor = CENTER)
 		self.table.heading('#2', text = 'Lastname', anchor = CENTER)
@@ -132,7 +131,7 @@ class App:
 		db_rows = self.run_query(query)
 		#rellenando datos
 		for row in db_rows:
-			self.table.insert('', 0, text = row[0], values =  row[1:6])
+			self.table.insert('', 0, text = row[0], values =  (row[1], "**********", row[3], row[4], row[5]))
 
 	def clean_data(self):
 		#Cambiar por un bucle for
