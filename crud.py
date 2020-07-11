@@ -88,7 +88,7 @@ class App:
 		deleteButton = Button (buttons, text = "Delete", command = self.delete_data)
 		deleteButton.grid(row = 0, column = 3)
 
-		cleanButton = Button (buttons, text = "Clean", command = self.clean_entrys)
+		cleanButton = Button (buttons, text = "Clean", command = self.clean_data)
 		cleanButton.grid(row = 0, column = 4)
 
 		#----------Panel----------
@@ -143,19 +143,28 @@ class App:
 		self.inputPass.delete(0, END)
 		self.inputComent.delete(1.0, END)
 
+	def real_mail(self):
+		email = self.inputmail.get()
+		match = re.match(r'([^@|\s]+@[^@]+\.[^@|\s]+)', email)
+		if match:
+			return True
+		return False
+
+
 	def add_user(self):
-		try:
-			if len(self.inputName.get()) != 0 and len(self.inputPass.get()) != 0:
+		if len(self.inputName.get()) != 0 and len(self.inputPass.get()) != 0:
+			if self.real_mail():
 				query = 'INSERT INTO USERSDATA VALUES (NULL, ?,?,?,?,?)'
 				parametros = self.inputName.get(),self.inputLastname.get(),self.inputmail.get(),self.inputPass.get(),self.inputComent.get(1.0, END)
 				self.run_query(query, parametros)
 				self.clean_data()
 				self.charge_data()
-			else:
-				messagebox.showwarning("Wait!", "At least put the name and the password.")
-		except:
-				messagebox.showwarning("Wait!", "There is already a user with this email.")
 
+			else:
+				messagebox.showwarning("Wait!", "Insert a valid e-mail.")
+		else:
+			messagebox.showwarning("Wait!", "At least put the name and the password.")
+		
 
 	def read_data(self):
 		try:
@@ -202,14 +211,6 @@ class App:
 				messagebox.showinfo("OK", "The user was successfully deleted.")
 			else:
 				messagebox.showwarning("Delete", "Select the user what you want delete.")
-
-	def clean_entrys(self):
-		self.inputId.delete(0, END)
-		self.inputName.delete(0, END)
-		self.inputLastname.delete(0, END)
-		self.inputmail.delete(0, END)
-		self.inputPass.delete(0, END)
-		self.inputComent.delete(1.0, END)
 
 
 
