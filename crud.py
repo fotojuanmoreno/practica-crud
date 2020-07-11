@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import ttk
-import sqlite3
 from tkinter import messagebox
+import sqlite3
 
 
 class App:
@@ -99,7 +99,7 @@ class App:
 		self.table.column('#1', width = 100)
 		self.table.column('#2', width = 100)
 		self.table.column('#3', width = 120)
-		self.table.column('#4', width = 200)
+		self.table.column('#4', width = 100)
 		self.table.column('#5', width = 300)
 		self.table.heading('#0', text = 'ID', anchor = CENTER)
 		self.table.heading('#1', text = 'Name', anchor = CENTER)
@@ -109,7 +109,6 @@ class App:
 		self.table.heading('#5', text = 'Coment', anchor = CENTER)
 
 		self.charge_data()
-
 
 
 
@@ -131,7 +130,7 @@ class App:
 		db_rows = self.run_query(query)
 		#rellenando datos
 		for row in db_rows:
-			self.table.insert('', 0, text = row[0], values =  (row[1], "**********", row[3], row[4], row[5]))
+			self.table.insert('', 0, text = row[0], values =  (row[1], row[2], row[3], "**********", row[5]))
 
 	def clean_data(self):
 		#Cambiar por un bucle for
@@ -149,7 +148,6 @@ class App:
 			return True
 		return False
 
-
 	def add_user(self):
 		if len(self.inputName.get()) != 0 and len(self.inputPass.get()) != 0:
 			if self.real_mail():
@@ -164,7 +162,6 @@ class App:
 		else:
 			messagebox.showwarning("Wait!", "At least put the name and the password.")
 		
-
 	def read_data(self):
 		try:
 			conn = sqlite3.connect("Users.db")
@@ -210,10 +207,6 @@ class App:
 				messagebox.showinfo("OK", "The user was successfully deleted.")
 			else:
 				messagebox.showwarning("Delete", "Select the user what you want delete.")
-
-
-
-
 
 
 def main():
