@@ -157,16 +157,19 @@ class App:
 
 	def add_user(self):
 		if len(self.inputName.get()) != 0 and len(self.inputPass.get()) != 0:
-			if self.real_mail():
-				thepass = self.hash()
-				query = 'INSERT INTO USERSDATA VALUES (NULL, ?,?,?,?,?)'
-				parametros = self.inputName.get(),self.inputLastname.get(),self.inputmail.get(),thepass.hexdigest(),self.inputComent.get(1.0, END)
-				self.run_query(query, parametros)
-				self.clean_data()
-				self.charge_data()
+			try:
+				if self.real_mail():
+					thepass = self.hash()
+					query = 'INSERT INTO USERSDATA VALUES (NULL, ?,?,?,?,?)'
+					parametros = self.inputName.get(),self.inputLastname.get(),self.inputmail.get(),thepass.hexdigest(),self.inputComent.get(1.0, END)
+					self.run_query(query, parametros)
+					self.clean_data()
+					self.charge_data()
 
-			else:
-				messagebox.showwarning("Wait!", "Insert a valid e-mail.")
+				else:
+					messagebox.showwarning("Wait!", "Insert a valid e-mail.")
+			except Exception:
+				messagebox.showwarning("Wait!", "There is already a user with that email.")
 		else:
 			messagebox.showwarning("Wait!", "At least put the name and the password.")
 		
@@ -197,8 +200,9 @@ class App:
 
 	def update_data(self):
 		if len(self.inputName.get()) != 0 and len(self.inputPass.get()) != 0:
+			thepass = self.hash()
 			query = 'UPDATE USERSDATA SET USER_NAME=?, LASTNAME=?, EMAIL=?, PASS=?, COMENT=?' + 'WHERE ID = ' + self.inputId.get()
-			parametros = self.inputName.get(),self.inputLastname.get(),self.inputmail.get(),self.inputPass.get(),self.inputComent.get(1.0, END)
+			parametros = self.inputName.get(),self.inputLastname.get(),self.inputmail.get(),thepass.hexdigest(),self.inputComent.get(1.0, END)
 			self.run_query(query, parametros)
 			messagebox.showinfo("Great!", "The register has been successfully updated.")
 			self.clean_data()
