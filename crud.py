@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
+import hashlib
 import sqlite3
 
 
@@ -148,11 +149,18 @@ class App:
 			return True
 		return False
 
+	def hash(self):
+		thepass = hashlib.sha256()
+		password=str(self.inputPass.get())
+		thepass.update(password.encode('utf-8'))
+		return thepass
+
 	def add_user(self):
 		if len(self.inputName.get()) != 0 and len(self.inputPass.get()) != 0:
 			if self.real_mail():
+				thepass = self.hash()
 				query = 'INSERT INTO USERSDATA VALUES (NULL, ?,?,?,?,?)'
-				parametros = self.inputName.get(),self.inputLastname.get(),self.inputmail.get(),self.inputPass.get(),self.inputComent.get(1.0, END)
+				parametros = self.inputName.get(),self.inputLastname.get(),self.inputmail.get(),thepass.hexdigest(),self.inputComent.get(1.0, END)
 				self.run_query(query, parametros)
 				self.clean_data()
 				self.charge_data()
